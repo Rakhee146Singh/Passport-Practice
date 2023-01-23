@@ -28,20 +28,34 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required',
+            'email' => 'required|email',
             'password' => 'required'
         ]);
-        $user = User::where(['name' => $validatedData['name'], 'password' => $validatedData['password']]);
-        // $token = $user->createToken("auth_token")->accessToken;
-        // return response()->json([
-        //     'token' => $token,
-        //     'user' => $user,
-        //     'message' => 'Logged in Successfully',
-        //     'status' => 1
-        // ]);
+        $user = User::where(['email' => $validatedData['email'], 'password' => $validatedData['password']])->first();
+        $token = $user->createToken("auth_token")->accessToken;
+        return response()->json([
+            'token' => $token,
+            'user' => $user,
+            'message' => 'Logged in Successfully',
+            'status' => 1
+        ]);
+    }
 
-        //dd($user);
-        // echo "<pre>";
-        print_r($user);
+    public function getUser($id)
+    {
+        $user = User::find($id);
+        if (is_null($user)) {
+            return response()->json([
+                'user' => null,
+                'message' => 'User not found',
+                'status' => 0
+            ]);
+        } else {
+            return response()->json([
+                'user' => $user,
+                'message' => 'User found',
+                'status' => 1
+            ]);
+        }
     }
 }
