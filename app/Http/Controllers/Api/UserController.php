@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use PDF;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
@@ -57,5 +58,11 @@ class UserController extends Controller
                 'status' => 1
             ]);
         }
+    }
+
+    public function Invoice()
+    {
+        $pdf = PDF::loadView('invoice_pdf');
+        return $pdf->download('techsolutionstuff.pdf');
     }
 }
